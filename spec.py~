@@ -8,4 +8,3 @@ def specgram(data,niff,fs,window,diff):
 		res=np.vstack((res,np.fft.fft((data[i*diff:i*diff+niff])*window)))
 		print i
 	return res
-

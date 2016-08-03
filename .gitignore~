@@ -8,7 +8,6 @@ __pycache__/
 # Media file
 *.wav
 *.mp3
-*.txt
 # Distribution / packaging
 .Python
 env/

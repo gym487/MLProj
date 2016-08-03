@@ -45,7 +45,7 @@ for i in range(np.shape(data)[0]):
 			print i
 			print f[j]
 			print dff[i][j+1]
-			print (dfff[i][j+1]+dfff[i][j])//2
+			print (dfff[i][j+1]+dfff[i][j])//2)
 			print data[i][j]
 print dff[100].size
 print data[100].size
