@@ -40,22 +40,22 @@ data=abs(sp[:,0:(sp[100].size//2)])
 dff=np.diff(data,n=2)
 dfff=np.diff(data,n=1)
 for i in range(np.shape(data)[0]):
-	for j in range(500):
-		if(dff[i][j+1]<0 and abs((dfff[i][j+1]+dfff[i][j])//2)<3000):
+	for j in range(3,500):
+		if(dff[i][j-1]<-50000 and abs((dfff[i][j-1]+dfff[i][j])//2)<50000):
 			print i
 			print f[j]
-			print dff[i][j+1]
-			print (dfff[i][j+1]+dfff[i][j])//2)
+			print dff[i][j-1]
+			print (dfff[i][j-1]+dfff[i][j])//2
 			print data[i][j]
 print dff[100].size
 print data[100].size
 print sp[100].size//2
-p1=subplot(211)
-p2=subplot(212)
-p3=subplot(221)
-p1.plot(f[:(f.size//2)],abs(data[100]))
-p2.plot(f[:(f.size//2)-2],dff[100])
-p3.plot(f[:(f.size//2)-1],dfff[100])
+#p1=subplot(211)
+#p2=subplot(212)
+#p3=subplot(221)
+plot(f[:(f.size//2)],abs(data[100]))
+plot(f[:(f.size//2)-2],dff[100])
+plot(f[:(f.size//2)-1],dfff[100])
 show()
 
 
