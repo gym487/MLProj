@@ -88,7 +88,7 @@ for i_dataset, dataset in enumerate(datasets):
         if hasattr(algorithm, 'cluster_centers_'):
             centers = algorithm.cluster_centers_
             center_colors = colors[:len(centers)]
-            plt.scatter(centers[:, 0], centers[:, 1], s=100, c=center_colors)
+            plt.scatter(centers[:, 0], centers[:, 1], s=100, c=center_colors,size=3)
         plt.xlim(-2, 2)
         plt.ylim(-2, 2)
         plt.xticks(())
@@ -98,4 +98,4 @@ for i_dataset, dataset in enumerate(datasets):
                  horizontalalignment='right')
         plot_num += 1
 
-plt.show()
+plt.show() 

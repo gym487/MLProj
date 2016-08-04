@@ -45,7 +45,7 @@ dfff=np.diff(data,n=1)
 peaks=np.zeros((data.shape[0],500))
 for i in range(np.shape(data)[0]):
 	for j in range(3,500):
-		if(dff[i][j-1]<-500000 and abs((dfff[i][j-1]+dfff[i][j])//2)<500000):
+		if(dff[i][j-1]<-500000 and abs((dfff[i][j-1]+dfff[i][j])//2)<500000 and data[i][j]>np.amax(data[i])/5):#Or / 7 or 14 or else. 
 			print i
 			print f[j]
 			print dff[i][j-1]
@@ -76,6 +76,7 @@ for i in range(nodes.shape[0]):
 		nodes[i][1]=a
 		nodes[i][0]=b
 print nodes
+
 ax=plt.subplot(111)
 clo=np.zeros((nodes.shape[0],3))
 clo[:,0]=nodes[:,1]
@@ -95,17 +96,20 @@ mp = cluster.SpectralClustering(n_clusters=8,
                                 eigen_solver='arpack',
                                 affinity="nearest_neighbors")
 for i in range(nodes.shape[0]):
-	if(nodes[i][1]>=3000000):
+	if(nodes[i][1]>5000000):#or 10000000 or 5000000 or else
 		dat.append(nodes[i])
-datb=np.array(dat)		
+datb=np.array(dat)
+print log(datb[2:])		
+print datb.shape
 print mp.fit(log(datb[2:]))
 
 print mp.labels_
 print log(datb[2:])
+
 #print mp.inertia_
 print nl
 for i in range(mp.labels_.shape[0]):
-	ax.scatter(nl[datb[i,0]//1][0],nl[datb[i,0]//1][1],color=colors[mp.labels_[i]])
+	ax.scatter(nl[datb[i,0]//1][0],nl[datb[i,0]//1][1],color=colors[mp.labels_[i]],s=3)
 #p1=subplot(211)
 #p2=subplot(212)
 #p3=subplot(221)
