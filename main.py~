@@ -7,7 +7,10 @@ from scipy import *
 from pylab import *
 import numpy as np
 import spec 
+from sklearn import cluster
+from sklearn.externals import joblib
 
+from mpl_toolkits.mplot3d import Axes3D
 filename = r'./qjj.wav'
 wavefile = wave.open(filename, 'rb') # open for writing
 
@@ -31,31 +34,85 @@ for i in range(numframes):
 
 Fs = framerate
 print Fs
-sp=spec.specgram(y,8000,Fs,np.hanning(8000),8000)
+sp=spec.specgram(y,8000,Fs,np.hanning(8000),2000)
 tsb=1/Fs
 
 f=np.fft.fftfreq(8000,tsb)
 print f
-data=abs(sp[:,0:(sp[100].size//2)])
+data=sp[:,0:(sp[100].size//2)]
 dff=np.diff(data,n=2)
 dfff=np.diff(data,n=1)
+peaks=np.zeros((data.shape[0],500))
 for i in range(np.shape(data)[0]):
 	for j in range(3,500):
-		if(dff[i][j-1]<-50000 and abs((dfff[i][j-1]+dfff[i][j])//2)<50000):
+		if(dff[i][j-1]<-500000 and abs((dfff[i][j-1]+dfff[i][j])//2)<500000):
 			print i
 			print f[j]
 			print dff[i][j-1]
 			print (dfff[i][j-1]+dfff[i][j])//2
 			print data[i][j]
-print dff[100].size
-print data[100].size
-print sp[100].size//2
+			peaks[i][j]=data[i][j]
+
+print peaks
+nodes=np.zeros((peaks.size,6))
+nl=np.zeros((peaks.size,2))
+l=0;
+for i in range(np.shape(peaks)[0]):
+	for j in range(peaks[i].size):
+		if(peaks[i][j]!=0):
+			#nodes[l][0]=data[i][j]
+			for k in range(1,6):
+				nodes[l][k]=np.amax(data[i,j*k-k:j*k+k])
+			nl[l]=[i,j]
+			nodes[l][0]=l
+			l+=1
+				
+			
+for i in range(nodes.shape[0]):
+	if(nodes[i][1]!=0):
+		a=nodes[i][1]
+		b=nodes[i][0]
+		nodes[i]=nodes[i]/nodes[i][1]
+		nodes[i][1]=a
+		nodes[i][0]=b
+print nodes
+ax=plt.subplot(111)
+clo=np.zeros((nodes.shape[0],3))
+clo[:,0]=nodes[:,1]
+clo[:,0]=clo[:,0]-np.amin(clo[:,0])
+clo[:,0]=clo[:,0]/np.amax(clo[:,0])
+clo[:,1]=1-clo[:,0]
+clo[:,2]=1-clo[:,0]
+print clo
+dat=[]
+colors = np.array([x for x in 'bgrcmykbgrcmykbgrcmykbgrcmyk'])
+colors = np.hstack([colors] * 20)
+
+#for i in range(300,12000):
+	#if(nodes[i,1]>=10000000):
+		#ax.scatter(log(nodes[i,2]),log(nodes[i,3]),log(nodes[i,4]),c=clo[i])
+mp = cluster.SpectralClustering(n_clusters=8,
+                                eigen_solver='arpack',
+                                affinity="nearest_neighbors")
+for i in range(nodes.shape[0]):
+	if(nodes[i][1]>=5000000):
+		dat.append(nodes[i])
+datb=np.array(dat)		
+print mp.fit(log(datb[2:]))
+
+print mp.labels_
+print log(datb[2:])
+#print mp.inertia_
+print nl
+for i in range(mp.labels_.shape[0]):
+	ax.scatter(nl[datb[i,0]//1][0],nl[datb[i,0]//1][1],color=colors[mp.labels_[i]])
 #p1=subplot(211)
 #p2=subplot(212)
 #p3=subplot(221)
-plot(f[:(f.size//2)],abs(data[100]))
-plot(f[:(f.size//2)-2],dff[100])
-plot(f[:(f.size//2)-1],dfff[100])
+#p1.plot(f[:(f.size//2)],abs(data[100]))
+#plot(f[:(f.size//2)-2],dff[100])
+#plot(f[:(f.size//2)-1],dfff[100])
+#imagesc(f,data)
 show()
 
 
