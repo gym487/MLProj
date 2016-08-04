@@ -11,7 +11,7 @@ from sklearn import cluster
 from sklearn.externals import joblib
 
 from mpl_toolkits.mplot3d import Axes3D
-filename = r'./qjjj.wav'
+filename = r'./ss.wav'
 wavefile = wave.open(filename, 'rb') # open for writing
 
 
@@ -95,7 +95,7 @@ mp = cluster.SpectralClustering(n_clusters=8,
                                 eigen_solver='arpack',
                                 affinity="nearest_neighbors")
 for i in range(nodes.shape[0]):
-	if(nodes[i][1]>=5000000):
+	if(nodes[i][1]>=3000000):
 		dat.append(nodes[i])
 datb=np.array(dat)		
 print mp.fit(log(datb[2:]))
