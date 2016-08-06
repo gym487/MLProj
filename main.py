@@ -45,23 +45,23 @@ dfff=np.diff(data,n=1)
 peaks=np.zeros((data.shape[0],500))
 for i in range(np.shape(data)[0]):
 	for j in range(3,500):
-		if(dff[i][j-1]<-500000 and abs((dfff[i][j-1]+dfff[i][j])//2)<500000 and data[i][j]>np.amax(data[i])/5):#Or / 7 or 14 or else. 
-			print i
-			print f[j]
-			print dff[i][j-1]
-			print (dfff[i][j-1]+dfff[i][j])//2
-			print data[i][j]
+		if(dff[i][j-1]<-500000 and abs((dfff[i][j-1]+dfff[i][j])//2)<500000 and data[i][j]>np.amax(data[i])/7):#Or / 7 or 14 or else. 
+			#print i
+			#print f[j]
+			#print dff[i][j-1]
+			#print (dfff[i][j-1]+dfff[i][j])//2
+			#print data[i][j]
 			peaks[i][j]=data[i][j]
 
 print peaks
-nodes=np.zeros((peaks.size,6))
+nodes=np.zeros((peaks.size,5))
 nl=np.zeros((peaks.size,2))
 l=0;
 for i in range(np.shape(peaks)[0]):
 	for j in range(peaks[i].size):
 		if(peaks[i][j]!=0):
 			#nodes[l][0]=data[i][j]
-			for k in range(1,6):
+			for k in range(1,5):
 				nodes[l][k]=np.amax(data[i,j*k-k:j*k+k])
 			nl[l]=[i,j]
 			nodes[l][0]=l
@@ -92,11 +92,11 @@ colors = np.hstack([colors] * 20)
 #for i in range(300,12000):
 	#if(nodes[i,1]>=10000000):
 		#ax.scatter(log(nodes[i,2]),log(nodes[i,3]),log(nodes[i,4]),c=clo[i])
-mp = cluster.SpectralClustering(n_clusters=8,
+mp = cluster.SpectralClustering(n_clusters=7,#Also changable
                                 eigen_solver='arpack',
                                 affinity="nearest_neighbors")
 for i in range(nodes.shape[0]):
-	if(nodes[i][1]>5000000):#or 10000000 or 5000000 or else
+	if(nodes[i][1]>3000000):#or 10000000 or 5000000 or else
 		dat.append(nodes[i])
 datb=np.array(dat)
 print log(datb[2:])		
@@ -110,6 +110,8 @@ print log(datb[2:])
 print nl
 for i in range(mp.labels_.shape[0]):
 	ax.scatter(nl[datb[i,0]//1][0],nl[datb[i,0]//1][1],color=colors[mp.labels_[i]],s=3)
+#for i in range(300,600):
+#	ax.scatter(log(datb[i,2]),log(datb[i,3]),log(datb[i,4]),color=colors[mp.labels_[i]],s=3)
 #p1=subplot(211)
 #p2=subplot(212)
 #p3=subplot(221)
